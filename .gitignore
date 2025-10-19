@@ -62,3 +62,23 @@ backend/data/*.db
 frontend/*/dist/
 frontend/*/build/
 
+# Non-essential documentation (status reports, extra guides)
+docs/status/
+docs/guides/
+PROJECT_COMPLETE.md
+GIT_READY.md
+*MISSION_COMPLETE.md
+*READY_FOR_PUSH.md
+*OPEN_THIS_FIRST.md
+*ALL_WORKING.md
+DEMO_NOW.md
+DEMO_READY.md
+FINAL_DEMO_INSTRUCTIONS.md
+COMPLETE_DEMO_GUIDE.md
+RUN_COMPLETE_DEMO.md
+VISUAL_DEMO_GUIDE.md
+
+# Keep only essential docs in root:
+# README.md, ARCHITECTURE.md, EXECUTIVE_SUMMARY.md,
+# START_HERE.md, DEMO_GUIDE.md, CHANGELOG.md, CONTRIBUTING.md
+
