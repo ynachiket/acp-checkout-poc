@@ -2,6 +2,26 @@ import { create } from 'zustand'
 import axios from 'axios'
 
 const API_BASE = 'http://localhost:8000'
+const MCP_ENDPOINT = `${API_BASE}/mcp`
+
+// Helper function to call MCP tools
+const callMCPTool = async (toolName, arguments) => {
+  const response = await axios.post(MCP_ENDPOINT, {
+    jsonrpc: "2.0",
+    id: Date.now(),
+    method: "tools/call",
+    params: {
+      name: toolName,
+      arguments: arguments
+    }
+  })
+  
+  if (response.data.error) {
+    throw new Error(response.data.error.message)
+  }
+  
+  return response.data.result
+}
 
 export const useStore = create((set, get) => ({
   messages: [],
@@ -57,48 +77,58 @@ export const useStore = create((set, get) => ({
     }
   },
   
-  // Search products
+  // Search products using MCP
   searchProducts: async (query) => {
     const startTime = Date.now()
     
     try {
-      // For demo, we'll use GTIN to get specific product
-      const response = await axios.post(`${API_BASE}/acp/v1/checkout_sessions`, {
-        line_items: [{ gtin: '00883419552502', quantity: 1 }],
-        buyer_info: {
-          first_name: "John",
-          last_name: "Doe",
-          email: "john.doe@example.com",
-          phone: "+15035551234"
-        }
+      // Use MCP search_products tool
+      const result = await callMCPTool('search_products', {
+        query: query,
+        limit: 1
       })
       
       get().logApiCall({
-        method: 'POST',
-        endpoint: '/acp/v1/checkout_sessions',
-        status: response.status,
+        method: 'MCP',
+        endpoint: 'tools/call: search_products',
+        status: 200,
         duration: Date.now() - startTime
       })
       
-      // Get product details from session
-      const session = response.data
-      const product = {
-        gtin: session.line_items[0].gtin,
-        title: session.line_items[0].title,
-        price: session.line_items[0].unit_price,
-        currency: 'USD',
-        description: "Nothing as fly, nothing as comfortable. The Nike Air Max 90 stays true to its OG running roots.",
-        availability: 'in_stock'
+      // Parse product from MCP response
+      const productsText = result.content.find(c => c.type === 'resource')?.resource?.text
+      const products = productsText ? eval(productsText) : []
+      
+      if (products.length > 0) {
+        const product = products[0]
+        
+        // Now create checkout with this product using MCP
+        const checkoutStart = Date.now()
+        const checkoutResult = await callMCPTool('create_checkout', {
+          items: [{ gtin: product.gtin, quantity: 1 }],
+          buyer_email: 'john.doe@example.com'
+        })
+        
+        get().logApiCall({
+          method: 'MCP',
+          endpoint: 'tools/call: create_checkout',
+          status: 200,
+          duration: Date.now() - checkoutStart
+        })
+        
+        // Parse session from response
+        const sessionText = checkoutResult.content.find(c => c.type === 'resource')?.resource?.text
+        const sessionData = sessionText ? eval(sessionText) : {}
+        
+        // Store session ID for later
+        set({ currentSession: { id: sessionData.session_id, status: sessionData.status } })
+        
+        get().addMessage({
+          role: 'assistant',
+          content: "I found this Nike Air Max 90 for you:",
+          products: [product]
+        })
       }
-      
-      // Store session
-      set({ currentSession: session })
-      
-      get().addMessage({
-        role: 'assistant',
-        content: "I found this Nike Air Max 90 for you:",
-        products: [product]
-      })
       
     } catch (error) {
       console.error('Search error:', error)
@@ -126,7 +156,7 @@ export const useStore = create((set, get) => ({
     }
   },
   
-  // Add shipping address
+  // Add shipping address using MCP
   addShippingAddress: async (message) => {
     const { currentSession } = get()
     
@@ -151,22 +181,39 @@ export const useStore = create((set, get) => ({
         country: "US"
       }
       
-      // Update session with address
-      const response = await axios.post(
-        `${API_BASE}/acp/v1/checkout_sessions/${currentSession.id}`,
-        {
-          fulfillment_address: shippingAddress
-        }
-      )
+      // Use MCP add_shipping_address tool
+      const result = await callMCPTool('add_shipping_address', {
+        session_id: currentSession.id,
+        address: shippingAddress
+      })
       
       get().logApiCall({
-        method: 'POST',
-        endpoint: `/acp/v1/checkout_sessions/${currentSession.id}`,
-        status: response.status,
+        method: 'MCP',
+        endpoint: 'tools/call: add_shipping_address',
+        status: 200,
         duration: Date.now() - startTime
       })
       
-      const session = response.data
+      // Parse response
+      const responseText = result.content.find(c => c.type === 'resource')?.resource?.text
+      const sessionData = responseText ? eval(responseText) : {}
+      
+      // Build session object for UI
+      const session = {
+        id: sessionData.session_id,
+        status: sessionData.status,
+        fulfillment_address: sessionData.shipping_address,
+        fulfillment_options: sessionData.shipping_options,
+        selected_fulfillment_option_id: sessionData.selected_shipping,
+        totals: {
+          items_total: { value: sessionData.totals?.items || '0' },
+          fulfillment: { value: sessionData.totals?.shipping || '0' },
+          taxes: { value: sessionData.totals?.tax || '0' },
+          total: { value: sessionData.totals?.total || '0' }
+        },
+        line_items: [{ title: "Nike Air Max 90", quantity: 1, total: sessionData.totals?.items || '0' }]
+      }
+      
       set({ currentSession: session })
       
       get().addMessage({
@@ -184,48 +231,55 @@ export const useStore = create((set, get) => ({
     }
   },
   
-  // Complete checkout
+  // Complete checkout using MCP
   completeCheckout: async (sessionId) => {
     const startTime = Date.now()
     
     try {
-      // First, tokenize payment
-      const paymentResponse = await axios.post(`${API_BASE}/acp/v1/delegate_payment`, {
-        card_number: "4242424242424242",
-        exp_month: 12,
-        exp_year: 2025,
-        cvc: "123"
+      // Use MCP complete_purchase tool
+      const result = await callMCPTool('complete_purchase', {
+        session_id: sessionId,
+        payment_method: {
+          card_number: "4242424242424242",
+          exp_month: 12,
+          exp_year: 2025,
+          cvc: "123"
+        }
       })
       
-      const paymentToken = paymentResponse.data.payment_token_id
-      
       get().logApiCall({
-        method: 'POST',
-        endpoint: '/acp/v1/delegate_payment',
-        status: paymentResponse.status,
+        method: 'MCP',
+        endpoint: 'tools/call: complete_purchase',
+        status: 200,
         duration: Date.now() - startTime
       })
       
-      // Then complete checkout
-      const completeStart = Date.now()
-      const completeResponse = await axios.post(
-        `${API_BASE}/acp/v1/checkout_sessions/${sessionId}/complete`,
-        { payment_token_id: paymentToken }
-      )
+      // Parse response
+      const responseText = result.content.find(c => c.type === 'resource')?.resource?.text
+      const orderData = responseText ? eval(responseText) : {}
       
-      get().logApiCall({
-        method: 'POST',
-        endpoint: `/acp/v1/checkout_sessions/${sessionId}/complete`,
-        status: completeResponse.status,
-        duration: Date.now() - completeStart
-      })
-      
-      const result = completeResponse.data
+      // Build order confirmation for UI
+      const orderConfirmation = {
+        id: sessionId,
+        status: 'completed',
+        order: {
+          id: orderData.order_id,
+          checkout_session_id: sessionId,
+          permalink: orderData.permalink,
+          created_at: new Date().toISOString()
+        },
+        messages: [
+          {
+            type: 'success',
+            text: orderData.message || 'Your order has been confirmed!'
+          }
+        ]
+      }
       
       get().addMessage({
         role: 'assistant',
         content: "🎉 Your order has been placed successfully!",
-        orderConfirmation: result
+        orderConfirmation: orderConfirmation
       })
       
       // Reset session
