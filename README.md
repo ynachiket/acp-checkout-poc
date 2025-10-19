@@ -38,7 +38,7 @@ http://localhost:5173
 **Demo Flow:**
 1. Type: "I want to buy Nike Air Max shoes"
 2. Click: "Add to Cart"
-3. Type: "yes"
+3. Type: "3775 SW Morrison, Portland, OR 97220"
 4. Click: "Complete Purchase"
 5. See: Order confirmed! ✅
 
