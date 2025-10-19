@@ -135,21 +135,23 @@ async def handle_tools_call(request: JSONRPCRequest, db: Session) -> JSONRPCResp
                 ).dict()
             )
         
-        # Return success response
+        # Return success response with proper JSON
+        import json
+        
         return JSONRPCResponse(
             id=request.id,
             result={
                 "content": [
                     {
                         "type": "text",
-                        "text": str(result) if not isinstance(result, (dict, list)) else ""
+                        "text": json.dumps(result) if isinstance(result, (dict, list)) else str(result)
                     },
                     {
                         "type": "resource",
                         "resource": {
                             "uri": f"nike://commerce/{tool_name}",
                             "mimeType": "application/json",
-                            "text": str(result)
+                            "text": json.dumps(result)  # Proper JSON serialization
                         }
                     }
                 ],

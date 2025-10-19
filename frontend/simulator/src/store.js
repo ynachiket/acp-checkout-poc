@@ -28,18 +28,11 @@ const parseMCPResult = (result) => {
   const resourceText = result.content?.find(c => c.type === 'resource')?.resource?.text
   if (!resourceText) return null
   
-  // The text contains Python dict representation, convert to JSON
+  // MCP server now returns proper JSON
   try {
-    // Replace Python True/False/None with JSON equivalents
-    const jsonText = resourceText
-      .replace(/'/g, '"')
-      .replace(/True/g, 'true')
-      .replace(/False/g, 'false')
-      .replace(/None/g, 'null')
-    
-    return JSON.parse(jsonText)
+    return JSON.parse(resourceText)
   } catch (e) {
-    console.error('Failed to parse MCP result:', e)
+    console.error('Failed to parse MCP result:', e, 'Text:', resourceText)
     return null
   }
 }
