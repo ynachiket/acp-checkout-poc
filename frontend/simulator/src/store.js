@@ -5,14 +5,14 @@ const API_BASE = 'http://localhost:8000'
 const MCP_ENDPOINT = `${API_BASE}/mcp`
 
 // Helper function to call MCP tools
-const callMCPTool = async (toolName, arguments) => {
+const callMCPTool = async (toolName, toolArguments) => {
   const response = await axios.post(MCP_ENDPOINT, {
     jsonrpc: "2.0",
     id: Date.now(),
     method: "tools/call",
     params: {
       name: toolName,
-      arguments: arguments
+      arguments: toolArguments
     }
   })
   
@@ -21,6 +21,27 @@ const callMCPTool = async (toolName, arguments) => {
   }
   
   return response.data.result
+}
+
+// Helper to parse MCP result
+const parseMCPResult = (result) => {
+  const resourceText = result.content?.find(c => c.type === 'resource')?.resource?.text
+  if (!resourceText) return null
+  
+  // The text contains Python dict representation, convert to JSON
+  try {
+    // Replace Python True/False/None with JSON equivalents
+    const jsonText = resourceText
+      .replace(/'/g, '"')
+      .replace(/True/g, 'true')
+      .replace(/False/g, 'false')
+      .replace(/None/g, 'null')
+    
+    return JSON.parse(jsonText)
+  } catch (e) {
+    console.error('Failed to parse MCP result:', e)
+    return null
+  }
 }
 
 export const useStore = create((set, get) => ({
@@ -96,8 +117,7 @@ export const useStore = create((set, get) => ({
       })
       
       // Parse product from MCP response
-      const productsText = result.content.find(c => c.type === 'resource')?.resource?.text
-      const products = productsText ? eval(productsText) : []
+      const products = parseMCPResult(result) || []
       
       if (products.length > 0) {
         const product = products[0]
@@ -117,8 +137,7 @@ export const useStore = create((set, get) => ({
         })
         
         // Parse session from response
-        const sessionText = checkoutResult.content.find(c => c.type === 'resource')?.resource?.text
-        const sessionData = sessionText ? eval(sessionText) : {}
+        const sessionData = parseMCPResult(checkoutResult) || {}
         
         // Store session ID for later
         set({ currentSession: { id: sessionData.session_id, status: sessionData.status } })
@@ -195,8 +214,7 @@ export const useStore = create((set, get) => ({
       })
       
       // Parse response
-      const responseText = result.content.find(c => c.type === 'resource')?.resource?.text
-      const sessionData = responseText ? eval(responseText) : {}
+      const sessionData = parseMCPResult(result) || {}
       
       // Build session object for UI
       const session = {
@@ -255,8 +273,7 @@ export const useStore = create((set, get) => ({
       })
       
       // Parse response
-      const responseText = result.content.find(c => c.type === 'resource')?.resource?.text
-      const orderData = responseText ? eval(responseText) : {}
+      const orderData = parseMCPResult(result) || {}
       
       // Build order confirmation for UI
       const orderConfirmation = {
