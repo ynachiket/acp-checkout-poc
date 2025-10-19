@@ -47,6 +47,7 @@ http://localhost:5173
 ## 📊 What's Included
 
 ### ✅ Complete Backend API
+- **MCP Server** - 6 discoverable tools for AI agents (NEW!)
 - **6 ACP Endpoints** - Full Agentic Checkout implementation
 - **6 Internal Services** - Product, Inventory, Checkout, Shipping, Payment, Order
 - **4 Database Models** - SQLAlchemy ORM with SQLite
@@ -56,8 +57,9 @@ http://localhost:5173
 ### ✅ ChatGPT Simulator UI
 - **React 18** - Modern frontend
 - **ChatGPT-style Interface** - Dark theme, conversational UX
+- **MCP Integration** - Uses Model Context Protocol for all operations (NEW!)
 - **Complete Purchase Flow** - Search → Cart → Checkout → Order
-- **Debug Panel** - API call inspector for technical demos
+- **Debug Panel** - Shows MCP tool calls in real-time
 - **Order Confirmation** - Beautiful success screen
 
 ### ✅ Comprehensive Documentation
@@ -73,6 +75,8 @@ http://localhost:5173
 ```
 AI Agents (ChatGPT, Claude, Gemini...)
          ↓
+   MCP Server (Tool Discovery) ✨ NEW!
+         ↓
 Protocol Gateway Layer (ACP + Future: Google, Meta)
          ↓
 Internal Services Layer (Protocol-Agnostic)
@@ -80,7 +84,7 @@ Internal Services Layer (Protocol-Agnostic)
 Data Layer (SQLite + Stripe)
 ```
 
-**Key Pattern:** Gateway architecture enables multi-protocol support
+**Key Pattern:** MCP + Gateway architecture = true agentic commerce
 
 ---
 
@@ -108,13 +112,21 @@ open http://localhost:5173
 
 ChatGPT-style interface with complete purchase flow
 
-### Option 2: Python Script
+### Option 2: Python Script (ACP)
 ```bash
 cd backend
 python scripts/test_purchase_flow.py
 ```
 
-Beautiful colored terminal output showing all steps
+Shows complete flow using ACP REST endpoints
+
+### Option 3: Python Script (MCP) ✨ NEW!
+```bash
+cd backend
+python scripts/test_mcp_flow.py
+```
+
+Shows complete flow using MCP tool discovery and invocation
 
 ### Option 3: API Documentation
 ```bash
