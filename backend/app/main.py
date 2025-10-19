@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from app.config import settings
 from app.database import init_db
 from app.gateway.acp import routes as acp_routes
+from app.mcp import server as mcp_server
 
 
 @asynccontextmanager
@@ -42,6 +43,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(acp_routes.router)
+app.include_router(mcp_server.router)
 
 
 @app.get("/health")
