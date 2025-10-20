@@ -46,9 +46,19 @@ http://localhost:5173
 
 ## 📊 What's Included
 
-### ✅ Complete Backend API
-- **MCP Server** - 6 discoverable tools for AI agents (NEW!)
-- **6 ACP Endpoints** - Full Agentic Checkout implementation
+### ✅ Complete Backend API (Dual Integration Paths)
+
+**PATH 1: MCP Endpoint** (Simplified Tool-Based API)
+- **Single Endpoint** - `POST /mcp` for all operations
+- **6 Tools** - search_products, get_product_details, create_checkout, add_shipping_address, complete_purchase, get_order_status
+- **Use Case** - Custom UIs, demos, rapid prototyping
+
+**PATH 2: ACP REST Endpoints** (OpenAI Standard)
+- **5+ REST Endpoints** - `/acp/v1/*` following OpenAI ACP spec
+- **Full Protocol** - Checkout sessions, payment tokens, orders, product feed
+- **Use Case** - ChatGPT integration, production AI agents
+
+**Shared Backend**
 - **6 Internal Services** - Product, Inventory, Checkout, Shipping, Payment, Order
 - **4 Database Models** - SQLAlchemy ORM with SQLite
 - **47 Tests** - 56% coverage (Product Service: 97%)
@@ -57,9 +67,9 @@ http://localhost:5173
 ### ✅ ChatGPT Simulator UI
 - **React 18** - Modern frontend
 - **ChatGPT-style Interface** - Dark theme, conversational UX
-- **MCP Integration** - Uses Model Context Protocol for all operations (NEW!)
+- **MCP Integration** - Uses simplified MCP endpoint (PATH 1)
 - **Complete Purchase Flow** - Search → Cart → Checkout → Order
-- **Debug Panel** - Shows MCP tool calls in real-time
+- **Debug Panel** - Shows API calls in real-time
 - **Order Confirmation** - Beautiful success screen
 
 ### ✅ Comprehensive Documentation
@@ -72,19 +82,35 @@ http://localhost:5173
 
 ## 🏗️ Architecture
 
+### Two Integration Paths
+
 ```
-AI Agents (ChatGPT, Claude, Gemini...)
-         ↓
-   MCP Server (Tool Discovery) ✨ NEW!
-         ↓
-Protocol Gateway Layer (ACP + Future: Google, Meta)
-         ↓
+AI Agents / Clients (ChatGPT, Claude, Custom UIs...)
+         │
+         ├─────────────────┬─────────────────┐
+         │                 │                 │
+    PATH 1: MCP      PATH 2: ACP REST   
+    (Simplified)     (OpenAI Standard)   
+         │                 │                 
+    POST /mcp         /acp/v1/*        
+    6 tools           5+ endpoints      
+         │                 │                 
+         └────────┬────────┘                 
+                  ↓                          
+Protocol Gateway Layer (Translation & Orchestration)
+                  ↓
 Internal Services Layer (Protocol-Agnostic)
-         ↓
+  • Product • Inventory • Checkout • Shipping • Payment • Order
+                  ↓
 Data Layer (SQLite + Stripe)
 ```
 
-**Key Pattern:** MCP + Gateway architecture = true agentic commerce
+**Key Pattern:** Dual-path API (MCP + ACP REST) → Gateway → Services
+
+| Path | Best For | POC Use |
+|------|----------|---------|
+| **MCP Endpoint** | Custom UIs, demos, rapid prototyping | ✅ Frontend simulator |
+| **ACP REST** | ChatGPT integration, production agents | Test scripts |
 
 ---
 
@@ -106,30 +132,33 @@ Data Layer (SQLite + Stripe)
 open http://localhost:5173
 ```
 
+**Uses:** PATH 1 (MCP Endpoint)  
 ChatGPT-style interface with complete purchase flow
 
-### Option 2: Python Script (ACP)
-```bash
-cd backend
-python scripts/test_purchase_flow.py
-```
-
-Shows complete flow using ACP REST endpoints
-
-### Option 3: Python Script (MCP) ✨ NEW!
+### Option 2: Python Script - MCP Path
 ```bash
 cd backend
 python scripts/test_mcp_flow.py
 ```
 
-Shows complete flow using MCP tool discovery and invocation
+**Uses:** PATH 1 (MCP Endpoint)  
+Shows complete flow using simplified tool-based API
+
+### Option 3: Python Script - ACP REST Path
+```bash
+cd backend
+python scripts/test_purchase_flow.py
+```
+
+**Uses:** PATH 2 (ACP REST)  
+Shows complete flow using OpenAI ACP standard endpoints
 
 ### Option 4: API Documentation
 ```bash
 open http://localhost:8000/docs
 ```
 
-Interactive Swagger UI for API testing
+Interactive Swagger UI for testing both MCP and ACP endpoints
 
 ---
 
