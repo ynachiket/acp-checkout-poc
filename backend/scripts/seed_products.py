@@ -1,8 +1,7 @@
 """
-Seed Database with Nike Products
+Seed Database with Sample Products
 
 Quick product seeding for POC demo.
-TODO: Replace with real Nike.com scraper
 """
 
 import sys
@@ -21,7 +20,7 @@ from app.config import settings
 
 
 def seed_products():
-    """Seed database with sample Nike products."""
+    """Seed database with sample products."""
     
     # Create engine and session
     engine = create_engine(settings.database_url)
@@ -29,7 +28,7 @@ def seed_products():
     SessionLocal = sessionmaker(bind=engine)
     db = SessionLocal()
     
-    # Sample Nike products
+    # Sample products
     products = [
         Product(
             id="nike-air-max-90-white",

@@ -1,6 +1,6 @@
-# Nike Agentic Commerce POC
+# Agentic Commerce Platform - POC
 
-**OpenAI Instant Checkout Integration - Complete Working Demo**
+**AI-Powered Checkout Integration with MCP & ACP Support**
 
 [![Status](https://img.shields.io/badge/status-demo--ready-green)](.)
 [![Coverage](https://img.shields.io/badge/coverage-56%25-yellow)](./docs/TESTING_GUIDE.md)
@@ -36,9 +36,9 @@ http://localhost:5173
 ```
 
 **Demo Flow:**
-1. Type: "I want to buy Nike Air Max shoes"
+1. Type: "I want to buy Air Max shoes"
 2. Click: "Add to Cart"
-3. Type: "3775 SW Morrison, Portland, OR 97220"
+3. Type: "123 Main St, Portland, OR 97220"
 4. Click: "Complete Purchase"
 5. See: Order confirmed! ✅
 
@@ -52,7 +52,7 @@ http://localhost:5173
 - **6 Internal Services** - Product, Inventory, Checkout, Shipping, Payment, Order
 - **4 Database Models** - SQLAlchemy ORM with SQLite
 - **47 Tests** - 56% coverage (Product Service: 97%)
-- **10 Nike Products** - Ready for demo
+- **10 Sample Products** - Ready for demo
 
 ### ✅ ChatGPT Simulator UI
 - **React 18** - Modern frontend
@@ -93,12 +93,8 @@ Data Layer (SQLite + Stripe)
 ### Essential Reading
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Complete technical architecture
 - **[EXECUTIVE_SUMMARY.md](./EXECUTIVE_SUMMARY.md)** - Business case and ROI
-- **[START_HERE.md](./START_HERE.md)** - Quick navigation guide
-
-### Guides
-- **[docs/guides/](./docs/guides/)** - Demo guides and tutorials
-- **[docs/status/](./docs/status/)** - Project status and progress
-- **[docs/TESTING_GUIDE.md](./docs/TESTING_GUIDE.md)** - Path to 90% coverage
+- **[docs/TESTING_GUIDE.md](./docs/TESTING_GUIDE.md)** - Testing guide and coverage goals
+- **[docs/DECISION_LOG.md](./docs/DECISION_LOG.md)** - Architectural decisions
 
 ---
 
@@ -128,7 +124,7 @@ python scripts/test_mcp_flow.py
 
 Shows complete flow using MCP tool discovery and invocation
 
-### Option 3: API Documentation
+### Option 4: API Documentation
 ```bash
 open http://localhost:8000/docs
 ```
@@ -196,10 +192,10 @@ open htmlcov/index.html
 
 ### For Production
 - Integrate real Stripe API
-- Add MCP server layer
-- Nike CPA/Digital Rollup integration
-- Kubernetes deployment
-- OpenAI certification
+- Production-grade MCP server deployment
+- Enterprise CRM/ERP integration
+- Kubernetes/container orchestration
+- AI platform certification
 
 See [EXECUTIVE_SUMMARY.md](./EXECUTIVE_SUMMARY.md) for complete production roadmap.
 
@@ -207,25 +203,23 @@ See [EXECUTIVE_SUMMARY.md](./EXECUTIVE_SUMMARY.md) for complete production roadm
 
 ## 🤝 Contributing
 
-Internal Nike project. See documentation for development guidelines.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
 
 ---
 
 ## 📝 License
 
-Internal Nike project - All rights reserved
+MIT License - See LICENSE file for details
 
 ---
 
 ## 📧 Support
 
 - **Architecture Questions:** See [ARCHITECTURE.md](./ARCHITECTURE.md)
-- **Demo Issues:** See [docs/guides/](./docs/guides/)
 - **Business Case:** See [EXECUTIVE_SUMMARY.md](./EXECUTIVE_SUMMARY.md)
+- **Testing:** See [docs/TESTING_GUIDE.md](./docs/TESTING_GUIDE.md)
 
 ---
 
-**Built:** October 19, 2025  
-**Status:** ✅ Complete Working Demo  
-**Timeline:** 1 day (90% ahead of schedule)  
+**Status:** ✅ Demo-Ready POC  
 **Coverage:** 56% (Product Service: 97%)

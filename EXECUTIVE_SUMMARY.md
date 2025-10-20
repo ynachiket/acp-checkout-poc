@@ -1,14 +1,13 @@
-# Nike Agentic Commerce POC - Executive Summary
+# Agentic Commerce POC - Executive Summary
 
-**Prepared for:** Nike Leadership & Engineering Teams  
 **Date:** October 19, 2025  
-**Version:** 1.1 (Updated)
+**Version:** 1.1
 
 ---
 
 ## TL;DR - 60 Second Summary
 
-**Opportunity:** Integrate Nike with ChatGPT's Instant Checkout (200M+ users)  
+**Opportunity:** Integrate e-commerce with AI agents' Instant Checkout (200M+ users)  
 **Recommendation:** Multi-layer Gateway Pattern with MCP Server  
 **POC Timeline:** 2 weeks  
 **Investment:** ~3 person-weeks ($18,000)  
@@ -22,7 +21,7 @@
 
 ## Overview
 
-This document provides an executive-level summary of the architectural approach selected for Nike's Agentic Commerce Protocol (ACP) Proof of Concept, which will enable Nike products to be discovered and purchased through ChatGPT and other AI agents.
+This document provides an executive-level summary of the architectural approach for an Agentic Commerce Protocol (ACP) Proof of Concept, which enables products to be discovered and purchased through ChatGPT and other AI agents.
 
 ---
 

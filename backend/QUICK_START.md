@@ -1,4 +1,4 @@
-# 🚀 Quick Start Guide - Nike ACP POC
+# 🚀 Quick Start Guide - ACP POC
 
 **Get the API running in 5 minutes!**
 
@@ -34,18 +34,18 @@ python scripts/seed_products.py
 
 **Expected Output:**
 ```
-🌱 Seeding database with Nike products...
+🌱 Seeding database with sample products...
 
-✅ Added: Nike Air Max 90
-✅ Added: Nike Air Max 270
-✅ Added: Nike Pegasus 40
-✅ Added: Nike Dunk Low Retro
-✅ Added: Nike Air Force 1 '07
-✅ Added: Nike Dri-FIT Training Shirt
-✅ Added: Nike Sportswear Tech Fleece Hoodie
-✅ Added: Nike Pro 365 Women's High-Waisted Leggings
-✅ Added: Nike React Infinity Run Flyknit 4
-✅ Added: Nike Metcon 9
+✅ Added: Air Max 90
+✅ Added: Air Max 270
+✅ Added: Pegasus 40
+✅ Added: Dunk Low Retro
+✅ Added: Air Force 1 '07
+✅ Added: Dri-FIT Training Shirt
+✅ Added: Sportswear Tech Fleece Hoodie
+✅ Added: Pro 365 Women's High-Waisted Leggings
+✅ Added: React Infinity Run Flyknit 4
+✅ Added: Metcon 9
 
 ✅ Seeding complete! 10 products processed.
 ```
@@ -76,7 +76,7 @@ curl http://localhost:8000/health
 ```json
 {
   "status": "healthy",
-  "app": "Nike Agentic Commerce POC",
+  "app": "Agentic Commerce POC",
   "version": "1.0.0",
   "environment": "development"
 }
@@ -198,7 +198,7 @@ GET    /redoc              # ReDoc UI
 
 ## What's Working
 
-✅ Product catalog (10 Nike products)  
+✅ Product catalog (10 sample products)  
 ✅ Checkout session creation  
 ✅ Address and shipping calculation  
 ✅ Payment tokenization (mock for POC)  
@@ -213,7 +213,7 @@ GET    /redoc              # ReDoc UI
 ⚠️ Comprehensive tests for all services (Product service has 75 tests, others pending)  
 ⚠️ MCP server layer  
 ⚠️ Webhooks for order events  
-⚠️ Real Nike.com product scraper  
+⚠️ Real product data integration  
 
 ---
 
@@ -246,7 +246,7 @@ stripe.api_key = settings.stripe_secret_key
 
 ### Build Real Product Scraper
 
-Create `scripts/scrape_nike_products.py` to fetch real Nike products from nike.com
+Create `scripts/fetch_products.py` to fetch real product data from your e-commerce platform
 
 ---
 

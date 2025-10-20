@@ -1,4 +1,4 @@
-# Nike Agentic Commerce POC - System Architecture
+# Agentic Commerce POC - System Architecture
 
 **Version:** 1.1 (Updated)  
 **Date:** October 19, 2025  
@@ -22,7 +22,7 @@
 
 ## Overview
 
-This document describes the architecture for Nike's Agentic Commerce Protocol (ACP) Proof of Concept, demonstrating integration with OpenAI's Instant Checkout capabilities through a multi-layered gateway pattern.
+This document describes the architecture for an Agentic Commerce Protocol (ACP) Proof of Concept, demonstrating integration with AI agents' checkout capabilities through a multi-layered gateway pattern.
 
 ### Goals
 - Demonstrate end-to-end ACP integration with simulated ChatGPT client
@@ -32,7 +32,7 @@ This document describes the architecture for Nike's Agentic Commerce Protocol (A
 
 ### Non-Goals (POC Scope)
 - Production-scale deployment (Kubernetes, multi-region)
-- Nike's internal service integrations (CPA, Digital Rollup)
+- Internal service integrations (CRM, ERP systems)
 - Advanced security features (mTLS, HSM integration)
 - Multi-marketplace support (US-only for POC)
 
@@ -255,7 +255,7 @@ AuthenticationError           →    "requires_sign_in"
 **Validation Rules:**
 - GTIN format validation (8-14 digits)
 - Quantity limits (1-10 per item)
-- Product buyability (no gift cards, Nike By You)
+- Product buyability rules (no gift cards, customization)
 - Address completeness
 - Payment token validity
 

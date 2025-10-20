@@ -1,6 +1,6 @@
 # Architecture Approaches - Quick Comparison
 
-**Nike Agentic Commerce POC**  
+**Agentic Commerce POC**  
 **Date:** October 19, 2025
 
 ---
@@ -325,7 +325,7 @@ ChatGPT discovers tools dynamically:
 - ✅ Never adding more protocols
 - ✅ Speed is only factor
 
-**Reality Check: These conditions don't apply to Nike**
+**Reality Check: These conditions don't apply to most e-commerce platforms**
 
 ### Choose Microservices If:
 - ✅ Massive scale (millions of requests/sec)
@@ -342,7 +342,7 @@ ChatGPT discovers tools dynamically:
 - ✅ Value clean code and separation of concerns
 - ✅ Need to move fast now and scale later
 
-**Reality Check: Perfect fit for Nike's needs**
+**Reality Check: Perfect fit for enterprise e-commerce needs**
 
 ---
 

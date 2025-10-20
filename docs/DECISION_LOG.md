@@ -1,6 +1,6 @@
 # Architectural Decision Log
 
-**Project:** Nike Agentic Commerce POC  
+**Project:** Agentic Commerce POC  
 **Date Started:** October 19, 2025  
 **Status:** Active Development
 
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document records all significant architectural decisions made during the design and implementation of Nike's Agentic Commerce POC. Each decision includes context, options considered, rationale, and consequences.
+This document records all significant architectural decisions made during the design and implementation of this Agentic Commerce POC. Each decision includes context, options considered, rationale, and consequences.
 
 ---
 
@@ -33,7 +33,7 @@ This document records all significant architectural decisions made during the de
 
 ### Context
 
-Need to demonstrate Nike's integration with OpenAI's Agentic Commerce Protocol (ACP) for Instant Checkout in ChatGPT. Must balance speed of POC delivery with architectural quality that can inform production decisions.
+Need to demonstrate integration with OpenAI's Agentic Commerce Protocol (ACP) for Instant Checkout in ChatGPT. Must balance speed of POC delivery with architectural quality that can inform production decisions.
 
 ### Options Considered
 
@@ -53,7 +53,7 @@ Need to demonstrate Nike's integration with OpenAI's Agentic Commerce Protocol (
 - Doesn't demonstrate scalability
 
 #### Option B: Production-Ready Implementation
-- Full Nike service integration (CPA, Digital Rollup, etc.)
+- Full internal service integration (CRM, ERP, etc.)
 - Kubernetes deployment
 - Multi-region support
 - 3-4 months delivery
@@ -65,7 +65,7 @@ Need to demonstrate Nike's integration with OpenAI's Agentic Commerce Protocol (
 **Cons:**
 - Too slow for POC
 - High complexity
-- Requires extensive Nike integration work
+- Requires extensive internal integration work
 
 #### Option C: Simplified Production-Like Architecture ✅ SELECTED
 - Clean architectural layers
@@ -90,7 +90,7 @@ Need to demonstrate Nike's integration with OpenAI's Agentic Commerce Protocol (
 
 ### Rationale
 
-- POC should demonstrate **how** Nike would integrate, not just **if** it works
+- POC should demonstrate **how** to integrate, not just **if** it works
 - Architecture patterns (gateway, layering) will be needed in production
 - Stakeholders need confidence in scalability path
 - 1-2 week timeline still acceptable for POC
@@ -100,7 +100,7 @@ Need to demonstrate Nike's integration with OpenAI's Agentic Commerce Protocol (
 
 **Positive:**
 - POC code can evolve to production (not throwaway)
-- Clear path to add Nike's internal services
+- Clear path to add internal services
 - Easy to extend with new protocols
 - Demonstrates technical sophistication
 

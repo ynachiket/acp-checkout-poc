@@ -1,6 +1,6 @@
-# ChatGPT Simulator - Nike ACP Demo
+# ChatGPT Simulator - ACP Demo
 
-Beautiful React-based simulator that demonstrates the complete Nike Agentic Commerce purchase flow.
+Beautiful React-based simulator that demonstrates the complete Agentic Commerce purchase flow.
 
 ---
 
@@ -34,9 +34,9 @@ http://localhost:5173
 ### Conversation Flow
 
 ```
-User: "I want to buy Nike Air Max shoes"
+User: "I want to buy Air Max shoes"
   ↓
-ChatGPT: Shows Nike Air Max 90 product card
+ChatGPT: Shows Air Max 90 product card
   ↓
 User: "Add to cart"
   ↓
@@ -120,7 +120,7 @@ src/
 
 ### Scenario 1: Quick Purchase (30 seconds)
 
-1. Type: "I want to buy Nike Air Max shoes"
+1. Type: "I want to buy Air Max shoes"
 2. Click "Add to Cart"
 3. Type: "Ship to New York"
 4. Click "Complete Purchase"
@@ -165,7 +165,7 @@ npm run dev -- --port 5174
 
 ### Chat Interface
 - ChatGPT-style dark theme
-- Product cards with Nike styling
+- Product cards with modern styling
 - Smooth animations
 
 ### Checkout Summary
@@ -190,8 +190,8 @@ Edit `tailwind.config.js`:
 theme: {
   extend: {
     colors: {
-      'nike-orange': '#FF6B35',  // Nike brand color
-      'chatgpt': { ... }          // ChatGPT theme
+      'brand-orange': '#FF6B35',  // Brand color
+      'chatgpt': { ... }           // ChatGPT theme
     }
   }
 }
