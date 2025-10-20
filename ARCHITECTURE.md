@@ -44,42 +44,46 @@ This document describes the architecture for an Agentic Commerce Protocol (ACP) 
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                   ChatGPT Simulator (React)                     │
-│             Simulates AI agent commerce interactions            │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         │ MCP Protocol
-                         │ (Tool Discovery & Invocation)
-                         │
-┌────────────────────────▼────────────────────────────────────────┐
-│                    MCP SERVER LAYER                             │
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐ │
-│  │  Tool Registry                                            │ │
-│  │  • search_products                                        │ │
-│  │  • get_product_details                                    │ │
-│  │  • create_checkout                                        │ │
-│  │  • update_checkout                                        │ │
-│  │  • complete_purchase                                      │ │
-│  │  • check_order_status                                     │ │
-│  └──────────────────────────────────────────────────────────┘ │
-│                                                                 │
-│  Dynamic tool discovery for AI agents                          │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         │ Internal Function Calls
-                         │
-┌────────────────────────▼────────────────────────────────────────┐
+│                   AI Agents / Clients                           │
+│          (ChatGPT, Claude, Custom UIs, Scripts)                 │
+└────────┬─────────────────────────────────────────┬──────────────┘
+         │                                         │
+         │ PATH 1: MCP Protocol                    │ PATH 2: Direct ACP REST
+         │ (Simplified Tool Invocation)            │ (OpenAI Standard Protocol)
+         │                                         │
+         ▼                                         ▼
+┌─────────────────────────┐             ┌─────────────────────────┐
+│   MCP ENDPOINT LAYER    │             │   ACP REST ENDPOINTS    │
+│   POST /mcp             │             │   /acp/v1/*             │
+│                         │             │                         │
+│  • Tool dispatch        │             │  • GET /products        │
+│  • JSON-RPC style       │             │  • POST /checkout_      │
+│  • 6 available tools    │             │    sessions             │
+│                         │             │  • PATCH /checkout_     │
+│  Tools:                 │             │    sessions/{id}        │
+│  - search_products      │             │  • POST /payment_       │
+│  - get_product_details  │             │    tokens               │
+│  - create_checkout      │             │  • POST /orders         │
+│  - add_shipping_address │             │                         │
+│  - complete_purchase    │             │                         │
+│  - get_order_status     │             │                         │
+└────────┬────────────────┘             └────────┬────────────────┘
+         │                                       │
+         │          Both paths converge          │
+         │                  ▼                    │
+         └──────────────────┬────────────────────┘
+                            │
+┌───────────────────────────▼─────────────────────────────────────┐
 │                  AGENTIC COMMERCE GATEWAY                       │
 │              (Protocol Translation & Orchestration)             │
 │                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐ │
-│  │  ACP Protocol Handler (v1.0)                             │ │
-│  │  ├── REST Endpoints (5 checkout endpoints)               │ │
-│  │  ├── Protocol Translator (ACP ↔ Internal)                │ │
-│  │  ├── Error Code Mapper                                   │ │
-│  │  ├── Response Enrichment                                 │ │
-│  │  └── Validation & Guardrails                             │ │
+│  │  Protocol Translation Layer                              │ │
+│  │  ├── MCP Tool Handler (dispatches to services)          │ │
+│  │  ├── ACP Protocol Translator (ACP ↔ Internal)           │ │
+│  │  ├── Error Code Mapper                                  │ │
+│  │  ├── Response Enrichment                                │ │
+│  │  └── Validation & Guardrails                            │ │
 │  └──────────────────────────────────────────────────────────┘ │
 │                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐ │
@@ -171,41 +175,108 @@ This document describes the architecture for an Agentic Commerce Protocol (ACP) 
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+### Integration Paths: MCP vs. Direct ACP REST
+
+This POC implements **two integration paths** to demonstrate flexibility:
+
+| Aspect | PATH 1: MCP Endpoint | PATH 2: Direct ACP REST |
+|--------|---------------------|------------------------|
+| **Use Case** | Simplified tool-based API | Standard OpenAI ACP protocol |
+| **Endpoint** | `POST /mcp` | `/acp/v1/*` (5 endpoints) |
+| **Protocol** | JSON-RPC style tool dispatch | OpenAI ACP v1.0 spec |
+| **Complexity** | Low - single endpoint | Medium - multiple REST endpoints |
+| **Tools/APIs** | 6 tools | 5 REST endpoints + product feed |
+| **Best For** | Custom UIs, scripts, demos | ChatGPT integration, production |
+| **POC Use** | ✅ Frontend simulator uses this | Test scripts available |
+
+#### When to Use MCP Path
+- Building custom AI-powered UIs
+- Rapid prototyping and demos  
+- Internal tools that need simplified API
+- Tool-based interaction model
+
+#### When to Use Direct ACP REST Path
+- Integrating with ChatGPT Instant Checkout
+- Production AI agents following OpenAI standards
+- Full ACP protocol compliance required
+- Multi-protocol gateway architectures
+
+**Important:** Both paths use the same internal services layer - they're just different "front doors" to the same commerce logic.
+
 ---
 
 ## Component Details
 
-### Layer 1: MCP Server (AI Interface)
+### Layer 1: MCP Endpoint & ACP REST (External Interfaces)
 
-**Purpose:** Provide AI agents with dynamic tool discovery and natural interaction patterns.
+#### 1a. MCP Endpoint (Simplified Tool-Based API)
 
-**Responsibilities:**
-- Expose commerce capabilities as discoverable tools
-- Handle MCP protocol communication
-- Provide tool metadata (descriptions, schemas)
-- Route tool invocations to Gateway Layer
+**Purpose:** Provide simplified, tool-based interface for AI agents and custom UIs.
 
-**Key Tools Exposed:**
+**Endpoint:**
+```
+POST /mcp          # Single endpoint for all operations
+```
+
+**Available Tools:**
 ```python
 Tools:
   - search_products(query, category, filters)
   - get_product_details(gtin)
   - create_checkout(items, address?)
-  - update_checkout(session_id, updates)
-  - complete_purchase(session_id, payment)
+  - add_shipping_address(checkout_id, address)
+  - complete_purchase(checkout_id, payment)
   - check_order_status(order_id)
+```
+
+**Request Format:**
+```json
+{
+  "tool": "search_products",
+  "arguments": {
+    "query": "running shoes",
+    "limit": 5
+  }
+}
 ```
 
 **Technology:**
 - Python FastAPI
-- MCP protocol implementation
-- JSON-RPC 2.0 for tool invocation
+- Simplified MCP-inspired protocol
+- Tool dispatch pattern
 
-**Why MCP?**
-- Industry standard for AI tool integration
-- Dynamic tool discovery (no hardcoded API knowledge needed)
-- Better AI agent experience
-- Future-proof for multi-agent ecosystem
+**Benefits:**
+- Single endpoint - easier to integrate
+- Tool-based interaction familiar to AI developers
+- Perfect for custom UIs and demos
+- Lower learning curve
+
+#### 1b. ACP REST Endpoints (OpenAI Standard Protocol)
+
+**Purpose:** Full OpenAI Agentic Commerce Protocol (ACP) v1.0 compliance.
+
+**Endpoints:**
+```
+POST   /acp/v1/checkout_sessions              # Create session
+PATCH  /acp/v1/checkout_sessions/{id}         # Update session
+POST   /acp/v1/checkout_sessions/{id}/complete # Complete checkout
+POST   /acp/v1/checkout_sessions/{id}/cancel  # Cancel session
+GET    /acp/v1/checkout_sessions/{id}         # Retrieve session
+GET    /acp/v1/product-feed.json              # Product catalog
+POST   /acp/v1/payment_tokens                 # Payment tokenization
+POST   /acp/v1/orders                         # Create order
+```
+
+**Technology:**
+- Python FastAPI
+- OpenAI ACP v1.0 specification
+- RESTful architecture
+
+**Benefits:**
+- Standard protocol for ChatGPT integration
+- Production-ready for AI agent ecosystem
+- Well-documented specification
+- Multi-agent compatibility
 
 ---
 
