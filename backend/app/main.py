@@ -1,7 +1,7 @@
 """
 Main FastAPI Application
 
-Entry point for the Nike Agentic Commerce POC backend.
+Entry point for the Agentic Commerce POC backend.
 """
 
 from fastapi import FastAPI
@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
-    description="Backend API for Nike's Agentic Commerce Protocol integration",
+    description="Backend API for Agentic Commerce Protocol integration",
     lifespan=lifespan
 )
 

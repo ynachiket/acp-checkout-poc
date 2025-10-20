@@ -87,7 +87,7 @@ class PurchaseFlowTester:
         payload = {
             "line_items": [
                 {
-                    "gtin": "00883419552502",  # Nike Air Max 90
+                    "gtin": "00883419552502",  # Air Max 90
                     "quantity": 1
                 }
             ],
@@ -109,7 +109,7 @@ class PurchaseFlowTester:
         }
         
         try:
-            self.print_info("Creating checkout session with Nike Air Max 90...")
+            self.print_info("Creating checkout session with Air Max 90...")
             response = requests.post(
                 f"{self.base_url}/acp/v1/checkout_sessions",
                 json=payload
@@ -289,7 +289,7 @@ class PurchaseFlowTester:
     
     def run_all_tests(self) -> bool:
         """Run all tests in sequence."""
-        self.print_header("NIKE AGENTIC COMMERCE POC - PURCHASE FLOW TEST")
+        self.print_header("AGENTIC COMMERCE POC - PURCHASE FLOW TEST")
         
         print(f"{Colors.BOLD}Testing complete purchase flow from cart to order confirmation{Colors.END}")
         print(f"Base URL: {self.base_url}\n")

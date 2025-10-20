@@ -18,7 +18,7 @@ def get_tools() -> List[ToolSchema]:
     return [
         ToolSchema(
             name="search_products",
-            description="Search Nike products by keywords, category, or price range. Returns a list of matching products with details.",
+            description="Search products by keywords, category, or price range. Returns a list of matching products with details.",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -47,7 +47,7 @@ def get_tools() -> List[ToolSchema]:
         
         ToolSchema(
             name="get_product_details",
-            description="Get detailed information about a specific Nike product by GTIN (Global Trade Item Number).",
+            description="Get detailed information about a specific product by GTIN (Global Trade Item Number).",
             inputSchema={
                 "type": "object",
                 "properties": {

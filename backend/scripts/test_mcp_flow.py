@@ -79,7 +79,7 @@ class MCPFlowTester:
     
     def run_demo(self):
         """Run the complete MCP demo flow."""
-        self.print_header("NIKE ACP POC - MCP PROTOCOL DEMO")
+        self.print_header("AGENTIC COMMERCE POC - MCP PROTOCOL DEMO")
         print(f"{Colors.BOLD}Demonstrating AI agent commerce using MCP tools{Colors.END}\n")
         
         # Step 0: Discover tools

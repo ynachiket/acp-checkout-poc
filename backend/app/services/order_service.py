@@ -56,7 +56,7 @@ class OrderService:
             totals=session.totals,
             buyer_info=session.buyer_info,
             payment_id=payment_id,
-            permalink=f"https://nike.com/orders/{order_id}"
+            permalink=f"https://example.com/orders/{order_id}"
         )
         
         self.db.add(order)

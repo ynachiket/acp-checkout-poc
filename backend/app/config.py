@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     # Application
-    app_name: str = Field(default="Nike Agentic Commerce POC")
+    app_name: str = Field(default="Agentic Commerce POC")
     app_version: str = Field(default="1.0.0")
     environment: str = Field(default="development")
     debug: bool = Field(default=True)
@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     log_file: str = Field(default="logs/app.log")
     
     # External Services
-    nike_base_url: str = Field(default="https://www.nike.com")
+    commerce_base_url: str = Field(default="https://example.com")
     
     # Testing
     testing: bool = Field(default=False)
